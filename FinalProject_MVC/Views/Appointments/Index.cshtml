@@ -1,0 +1,86 @@
+﻿@model IEnumerable<FinalProject_MVC.Models.Appointments>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<h5>Appointments for @Session["CurrentFirstName"] @Session["CurrentLastName"]</h5>
+<h5>ID number: @Session["CurrentUserId"]</h5>
+
+@if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Appointment ID
+        </th>
+        <th>
+            Sender
+        </th>
+        <th>
+            Appointment Date and Time
+        </th>
+        <th>
+            Property Address
+        </th>
+        <th>
+            Apartment Number
+        </th>
+        <th>
+            Your Manager
+        </th>
+        <th>
+            Confirmation
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppointmentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName)  @Html.DisplayFor(modelItem => item.User.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apartment.Property.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName)
+            </td>
+            <td>
+                @if (item.Confirmation == false)
+                {
+                    <span>Not yet</span>
+                }
+                else
+                {
+                    <span>Confirmed</span>
+                }
+            </td>
+            <td>
+                @if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AppointmentId }) <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.AppointmentId }) <span>|</span>
+                }
+                @Html.ActionLink("Details", "Details", new { id = item.AppointmentId })
+            </td>
+        </tr>
+    }
+
+</table>

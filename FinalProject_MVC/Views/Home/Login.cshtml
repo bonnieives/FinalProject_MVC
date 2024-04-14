@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<main>
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+    {
+        <div>
+            <h2>Login</h2>
+            <label for="txtUserName">Username:</label>
+            <input type="text" id="txtUserName" name="UserName" />
+            <br />
+            <label for="txtPassword">Password:</label>
+            <input type="password" id="txtPassword" name="Password" />
+            <br />
+            <button type="submit">Login</button>
+            @if (TempData["Message"] != null)
+            {
+                <span style="color:red;">@TempData["Message"]</span>
+            }
+        </div>
+    }
+
+    <p>Don't have an account? @Html.ActionLink("Sign Up", "SignUp", "Home")</p>
+</main>
+
+@section Scripts {
+    <script>
+        function showErrorMessage(message) {
+            $("#lblErrorMessage").text(message).show();
+        }
+
+        $("form").submit(function () {
+            var userName = $("#txtUserName").val().trim();
+            var password = $("#txtPassword").val().trim();
+
+            if (userName === "" || password === "") {
+                showErrorMessage("Username and password are required.");
+                return false; // Prevent form submission
+            }
+        });
+    </script>
+}

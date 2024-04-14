@@ -1,0 +1,74 @@
+﻿@model FinalProject_MVC.Models.Messages
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Messages</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.MessageId)
+
+    @if (Model.MessageId > 0)
+    {
+        <div class="form-group">
+            <label class="control-label col-md-2">Original Sender</label>
+            <div class="col-md-10">
+                <p>@ViewBag.SenderFirstName @ViewBag.SenderLastName</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Your Response</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.SenderId, Model.ReceiverId)
+        @Html.HiddenFor(model => model.ReceiverId, Model.SenderId)
+    }
+    else
+    {
+
+        if ((int)@Session["CurrentCategoryId"] == 6)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.ApartmentId, "Select Property", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ApartmentId, (IEnumerable<SelectListItem>)ViewBag.Apartments, "Select Property", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ApartmentId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

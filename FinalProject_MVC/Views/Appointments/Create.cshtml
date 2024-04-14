@@ -1,0 +1,71 @@
+﻿@model FinalProject_MVC.Models.Appointments
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Appointments</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.AppointmentId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateTime, "Choose the Date and Time", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @{
+                string formattedDateTime = Model.DateTime.ToString("yyyy-MM-ddTHH:mm");
+                string timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(Model.DateTime).ToString("hh\\:mm");
+                string dateTimeValue = $"{formattedDateTime}{timeZoneOffset}";
+            }
+            <input type="datetime-local" id="DateTime" name="DateTime" class="form-control" value="@dateTimeValue" />
+            @Html.ValidationMessageFor(model => model.DateTime, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApartmentId, "Select Property", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ApartmentId, (IEnumerable<SelectListItem>)ViewBag.Apartments, "Select Property", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ApartmentId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @if ((int)@Session["CurrentCategoryId"] == 7)
+    {
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.User.UserId, "Select Tenant", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.User.UserId, (IEnumerable<SelectListItem>)ViewBag.Tenants, "Select Tenant", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.User.UserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    }
+    else
+    {
+        @Html.HiddenFor(model => model.User.UserId, new { Value = (int)Session["CurrentUserId"] })
+    }
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

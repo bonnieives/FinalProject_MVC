@@ -1,0 +1,99 @@
+﻿@model FinalProject_MVC.Models.Users
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <section class="row" aria-labelledby="aspnetTitle">
+        <h1 id="title">Property Rental Management Web Site</h1>
+        <h4>Welcome, @Model.FirstName @Model.LastName!</h4>
+        <h5>Email: @Model.Email</h5>
+        <h5>@Html.ActionLink("Access you profile", "Edit", "Users", new { id = Model.UserId }, null)</h5>
+        <p>ID Number: @Model.UserId</p>
+        <p>
+            Category:
+            @if (@Model.CategoryId == 4)
+            {
+                <text>Administrator</text>
+            }
+            else if (@Model.CategoryId == 5)
+            {
+                <text>Owner</text>
+            }
+            else if (@Model.CategoryId == 6)
+            {
+                <text>Tenant</text>
+            }
+            else if (@Model.CategoryId == 7)
+            {
+                <text>Manager</text>
+            }
+        </p>
+
+        @if ((int)@Session["CurrentCategoryId"] == 6)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Apartment Number</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                @if (ViewBag.AvailableApartments != null)
+                {
+                    <h3>Please check out our available properties!</h3>
+                }
+
+                <tbody>
+                    @foreach (var property in ViewBag.availableApartments)
+                    {
+                        <tr style="border-top: 1px solid black; margin: 0 auto;">
+                            <td>@property.ApartmentNumber</td>
+                            <td>@property.Property.CivicNumber @property.Property.Address @property.Property.Zip @property.Property.City</td>
+                            <td>
+                                @Html.ActionLink("Schedule Appointment", "Create", "Appointments", new { propertyId = property.PropertyId }, null) |
+                                @Html.ActionLink("Send Message", "Create", "Messages", new { propertyId = property.PropertyId }, null) |
+                                @Html.ActionLink("See Apartment", "Details", "Apartments", new { id = property.ApartmentId }, null)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @{
+            bool messageExists = ViewBag.MessageExists != null && ((List<FinalProject_MVC.Models.Messages>)ViewBag.MessageExists).Count > 0;
+            bool appointmentExists = ViewBag.AppointmentExists != null && ((List<FinalProject_MVC.Models.Appointments>)ViewBag.AppointmentExists).Count > 0;
+        }
+
+        @if ((int)@Session["CurrentCategoryId"] == 7)
+        {
+
+            if (messageExists)
+            {
+                <h3>You have new messages</h3>
+                @Html.ActionLink("Go to Messages", "Index", "Messages")
+            }
+            if (appointmentExists)
+            {
+                <h3>You have new Appointments</h3>
+                @Html.ActionLink("Go to Appointments", "Index", "Appointments")
+            }
+            if (!appointmentExists && !messageExists)
+            {
+                <h3>You don't have new Messages or Appointments</h3>
+            }
+        }
+
+    </section>
+
+    <div class="row">
+        <section class="col-md-4" aria-labelledby="librariesTitle">
+        </section>
+        <section class="col-md-4" aria-labelledby="hostingTitle">
+        </section>
+    </div>
+</main>

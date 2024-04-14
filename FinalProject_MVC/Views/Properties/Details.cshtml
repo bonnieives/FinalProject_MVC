@@ -1,0 +1,73 @@
+﻿@model FinalProject_MVC.Models.Apartments
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Properties</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Civic Number
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.CivicNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Property.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.Address)
+        </dd>
+
+        <dt>
+            Apartment Number
+        </dt>
+
+        <dd>
+            @if (ViewBag.Apartments != null)
+            {
+               <p>@ViewBag.Apartments</p>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Property.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Property.Zip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.Zip)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Property.Province)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.Province)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 7)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.PropertyId }) <span>|</span>
+    }
+
+    @Html.ActionLink("Back to List", "Index")
+</p>

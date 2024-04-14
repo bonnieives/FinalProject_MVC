@@ -1,0 +1,51 @@
+﻿@model FinalProject_MVC.Models.Messages
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Appointment Information</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Sender
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sender.FirstName) @Html.DisplayFor(model => model.Sender.LastName)
+        </dd>
+        <dt>
+            Property Address
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.Property.Address)
+        </dd>
+        <dt>
+            Apartment Number
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.ApartmentNumber)
+        </dd>
+        <dt>
+            Manager
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Receiver.FirstName) @Html.DisplayFor(model => model.Receiver.LastName)
+        </dd>
+        <dt>
+            Your Message
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.Manager.FirstName) @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<p>
+    @if ((int)@Session["CurrentCategoryId"] == 6)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.MessageId }) <span>|</span>
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

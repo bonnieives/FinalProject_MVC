@@ -1,0 +1,80 @@
+﻿@model FinalProject_MVC.Models.Apartments
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Apartments</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Manager
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Manager.FirstName) @Html.DisplayFor(model => model.Manager.LastName)
+        </dd>
+
+        <dt>
+            Owner
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Owner.FirstName) @Html.DisplayFor(model => model.Owner.LastName)
+        </dd>
+
+        <dt>
+            Adress
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.CivicNumber) @Html.DisplayFor(model => model.Property.Address),
+            @Html.DisplayFor(model => model.Property.Zip), @Html.DisplayFor(model => model.Property.City), @Html.DisplayFor(model => model.Property.Province)
+        </dd>
+
+        <dt>
+            Apartment Number
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApartmentNumber)
+        </dd>
+
+
+        <dt>
+            Status
+        </dt>
+
+        <dd>
+            @if (Model.Status.StatusId == 1)
+            {
+                <span>Available</span>
+            }
+            else
+            {
+                <span>Unavailable</span>
+            }
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to Main", "Index", "Home") <span>|</span>
+
+    @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 7)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ApartmentId })
+
+    }
+    else
+            {
+                <span>Test</span>
+            }
+    <span>|</span>
+    @Html.ActionLink("Back to List", "Index")
+
+</p>

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Sign Up";
+}
+
+<main>
+    @using (Html.BeginForm("SignUp", "Home", FormMethod.Post))
+    {
+        <div>
+            <h2>Sign Up</h2>
+            <br />
+            <label for="txtFirstName">First Name:</label>
+            <input type="text" id="txtFirstName" name="firstName" />
+            <br />
+            <label for="txtLastName">Last Name:</label>
+            <input type="text" id="txtLastName" name="lastName" />
+            <br />
+            <label for="txtEmail">Email:</label>
+            <input type="email" id="txtEmail" name="email" />
+            <br />
+            <label for="txtPassword">Password:</label>
+            <input type="password" id="txtPassword" name="password" />
+            <br />
+            <button type="submit">Sign Up</button>
+        </div>
+    }
+</main>

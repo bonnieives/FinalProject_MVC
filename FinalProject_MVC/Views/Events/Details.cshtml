@@ -1,0 +1,70 @@
+﻿@model FinalProject_MVC.Models.Events
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Events</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Event ID
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventId)
+        </dd>
+        <dt>
+            Manager
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.Manager.FirstName) @Html.DisplayFor(model => model.Apartment.Manager.LastName)
+        </dd>
+
+        <dt>
+            Owner
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.Owner.FirstName) @Html.DisplayFor(model => model.Apartment.Owner.LastName)
+        </dd>
+
+        <dt>
+            Property Address
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.Property.CivicNumber) @Html.DisplayFor(model => model.Apartment.Property.Address),
+            @Html.DisplayFor(model => model.Apartment.Property.Zip), @Html.DisplayFor(model => model.Apartment.Property.City),
+            @Html.DisplayFor(model => model.Apartment.Property.Province)
+        </dd>
+
+        <dt>
+            Apartment Number
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Apartment.ApartmentNumber)
+        </dd>
+
+        <dt>
+            Event Description
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if ((int)@Session["CurrentCategoryId"] == 7)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventId }) <span>|</span>
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

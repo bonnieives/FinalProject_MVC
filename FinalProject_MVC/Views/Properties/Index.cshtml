@@ -1,0 +1,68 @@
+﻿@model IEnumerable<FinalProject_MVC.Models.Apartments>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Apartment Id
+        </th>
+        <th>
+            Apartment Full Address
+        </th>
+        <th>
+            Apartment Number
+        </th>
+        <th>
+            Owner
+        </th>
+        <th>
+            Manager
+        </th>
+        <th>
+            Status
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApartmentId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property.CivicNumber) @Html.DisplayFor(modelItem => item.Property.Address),
+            @Html.DisplayFor(modelItem => item.Property.Zip), @Html.DisplayFor(modelItem => item.Property.City), @Html.DisplayFor(modelItem => item.Property.Province)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApartmentNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status.StatusDescription)
+        </td>
+        <td>
+            @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 7)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = item.ApartmentId }) <span>|</span>
+                @Html.ActionLink("Delete", "Delete", new { id = item.ApartmentId }) <span>|</span>
+            }
+            @Html.ActionLink("Details", "Details", new { id = item.ApartmentId })
+
+        </td>
+    </tr>
+}
+
+</table>

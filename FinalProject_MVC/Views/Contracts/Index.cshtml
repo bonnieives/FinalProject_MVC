@@ -1,0 +1,91 @@
+﻿@model IEnumerable<FinalProject_MVC.Models.Contracts>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Initial Date
+        </th>
+        <th>
+            Final Date
+        </th>
+        <th>
+            Value
+        </th>
+        <th>
+            Payday
+        </th>
+        <th>
+            Manager
+        </th>
+        <th>
+            Owner
+        </th>
+        <th>
+            Tenant
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FinalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Payday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apartment.Owner.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tenant.FirstName)
+            </td>
+            <td>
+                @if ((int)@Session["currentCategoryId"] != 6)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ContractId }) <span>|</span>
+
+                }
+                @Html.ActionLink("Details", "Details", new { id = item.ContractId }) 
+
+                @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
+                {
+                    <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.ContractId })
+                }
+            </td>
+        </tr>
+        <tr style="border-bottom: 2px solid black">
+            <td colspan="8">
+                @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber) -
+                @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber)
+                @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
+                @Html.DisplayFor(modelItem => item.Apartment.Property.Zip),
+                @Html.DisplayFor(modelItem => item.Apartment.Property.City),
+                @Html.DisplayFor(modelItem => item.Apartment.Property.Province)
+            </td>
+        </tr>
+    }
+
+</table>
