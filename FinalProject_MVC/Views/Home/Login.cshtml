@@ -2,42 +2,63 @@
     ViewBag.Title = "Login";
 }
 
-<main>
+<main class="login_card">
+    <h3>Property Rental Management</h3>
+    <hr />
     @using (Html.BeginForm("Login", "Home", FormMethod.Post))
     {
         <div>
             <h2>Login</h2>
-            <label for="txtUserName">Username:</label>
+            <label for="txtUserName">Username</label>
             <input type="text" id="txtUserName" name="UserName" />
+            <span id="userNameError" class="text-danger" style="display: none;"></span>
             <br />
-            <label for="txtPassword">Password:</label>
+            <label for="txtPassword">Password</label>
             <input type="password" id="txtPassword" name="Password" />
-            <br />
-            <button type="submit">Login</button>
-            @if (TempData["Message"] != null)
+            <span id="passwordError" class="text-danger" style="display: none;"></span>
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
             {
-                <span style="color:red;">@TempData["Message"]</span>
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
             }
+            <br />
+            <hr />
+            <button type="submit" style="width: 60%;">Login</button>
         </div>
     }
-
+    <hr />
     <p>Don't have an account? @Html.ActionLink("Sign Up", "SignUp", "Home")</p>
 </main>
 
 @section Scripts {
     <script>
-        function showErrorMessage(message) {
-            $("#lblErrorMessage").text(message).show();
-        }
+        $(function () {
+            $("form").submit(function (event) {
+                // Prevent the form from submitting
+                event.preventDefault();
 
-        $("form").submit(function () {
-            var userName = $("#txtUserName").val().trim();
-            var password = $("#txtPassword").val().trim();
+                // Reset previous error messages
+                $(".text-danger").hide();
 
-            if (userName === "" || password === "") {
-                showErrorMessage("Username and password are required.");
-                return false; // Prevent form submission
-            }
+                // Get the values of the username and password fields
+                var userName = $("#txtUserName").val().trim();
+                var password = $("#txtPassword").val().trim();
+
+                // Check if the fields are empty
+                if (userName === "") {
+                    $("#userNameError").text("Username is required.").show();
+                }
+
+                if (password === "") {
+                    $("#passwordError").text("Password is required.").show();
+                }
+
+                // If both fields are not empty, submit the form
+                if (userName !== "" && password !== "") {
+                    $(this).off("submit").submit();
+                }
+            });
         });
     </script>
 }

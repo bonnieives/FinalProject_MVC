@@ -31,7 +31,7 @@ namespace FinalProject_MVC.Models
             HasRequired(c => c.Apartment)
                 .WithMany()
                 .HasForeignKey(c => c.ApartmentId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             HasRequired(c => c.User)
                 .WithMany()

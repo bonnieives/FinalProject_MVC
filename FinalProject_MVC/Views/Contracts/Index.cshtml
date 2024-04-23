@@ -4,88 +4,54 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="login_card sign_up" style="width: 90%; display: flex; flex-direction:column; align-items: center; justify-content: center; padding: 20px 0;">
 
-<p>
-    @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
-    {
-        @Html.ActionLink("Create New", "Create")
+    <h2>List of contracts</h2>
+
+    <p>
+        @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
+        {
+        <p class="button-access-profile">@Html.ActionLink("Create New", "Create")</p>
     }
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Initial Date
-        </th>
-        <th>
-            Final Date
-        </th>
-        <th>
-            Value
-        </th>
-        <th>
-            Payday
-        </th>
-        <th>
-            Manager
-        </th>
-        <th>
-            Owner
-        </th>
-        <th>
-            Tenant
-        </th>
-        <th></th>
-    </tr>
+        </p>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.InitialDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FinalDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Payday)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.Owner.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenant.FirstName)
-            </td>
-            <td>
-                @if ((int)@Session["currentCategoryId"] != 6)
-                {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ContractId }) <span>|</span>
 
-                }
-                @Html.ActionLink("Details", "Details", new { id = item.ContractId }) 
+        @foreach (var item in Model)
+        {
+            <div style="background-color: #F0F0F0; width: 90%; border: 2px solid black; border-radius: 10px; padding: 20px 0; margin: 10px 0;">
+                <div>
+                    <h5>Contract number: @Html.DisplayFor(modelItem => item.ContractId) - For: @Html.DisplayFor(modelItem => item.Apartment.ApartmentTitle)</h5>
+                </div>
+                <hr style="border: 2px solid black; width: 90%;" />
+                <div class="contract_description">
+                    <p style="padding: 5px; margin: 0px;">
+                        The current contract is celebrated between @Html.DisplayFor(modelItem => item.Apartment.Owner.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Owner.LastName)
+                        (Owner) and @Html.DisplayFor(modelItem => item.Tenant.FirstName) @Html.DisplayFor(modelItem => item.Tenant.LastName) (Tenant) having as manager
+                        @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName).
+                        The apartment has the civic number @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber), located at @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
+                        with the postal code @Html.DisplayFor(modelItem => item.Apartment.Property.Zip), at the city of @Html.DisplayFor(modelItem => item.Apartment.Property.City),
+                        in the provice of @Html.DisplayFor(modelItem => item.Apartment.Property.Province). The Tenant will pay $@Html.DisplayFor(modelItem => item.Apartment.ApartmentValue),
+                        on each @Html.DisplayFor(modelItem => item.Payday) in the month.
+                    </p>
+                    <p style="padding: 5px; margin: 0px;">
+                        <span style="font-weight: bold">Starting in:</span> @Html.DisplayFor(modelItem => item.InitialDate)
+                    </p>
+                    <p style="padding: 5px; margin: 0px;">
+                        <span style="font-weight: bold">Ending in: </span> @Html.DisplayFor(modelItem => item.FinalDate)
+                    </p>
+                    <hr style="border: 2px solid black; width: 90%;" />
+                </div>
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                    @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
+                    {
+                        <p class="button-access-profile" style="margin: 10px;">@Html.ActionLink("Edit", "Edit", new { id = item.ContractId })</p>
+                        <p class="button-access-profile" style="margin: 10px;">@Html.ActionLink("Delete", "Delete", new { id = item.ContractId })</p>
+                    }
+                    <p class="button-access-profile" style="margin: 10px;">@Html.ActionLink("Details", "Details", new { id = item.ContractId })</p>
+                </div>
+            </div>
 
-                @if ((int)@Session["currentCategoryId"] != 6 && (int)@Session["currentCategoryId"] != 7)
-                {
-                    <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.ContractId })
-                }
-            </td>
-        </tr>
-        <tr style="border-bottom: 2px solid black">
-            <td colspan="8">
-                @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber) -
-                @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber)
-                @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
-                @Html.DisplayFor(modelItem => item.Apartment.Property.Zip),
-                @Html.DisplayFor(modelItem => item.Apartment.Property.City),
-                @Html.DisplayFor(modelItem => item.Apartment.Property.Province)
-            </td>
-        </tr>
-    }
+         }
+            
+        </div>
 
-</table>

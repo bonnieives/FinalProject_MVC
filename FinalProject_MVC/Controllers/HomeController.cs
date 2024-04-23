@@ -2,26 +2,32 @@
 using FinalProject_MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Data.Entity;
-
+using FinalProject_MVC.Services;
 
 namespace FinalProject_MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private FinalProjectContext db = new FinalProjectContext();
+        private readonly IAuthService _authService;
+        private readonly FinalProjectContext _context;
+
+        public HomeController(IAuthService authService, FinalProjectContext context)
+        {
+            _authService = authService;
+            _context = context;
+        }
+
         [Authorize]
         public ActionResult Index()
         {
-           
             string userName = User.Identity.Name;
-
-            Users user = db.Users.FirstOrDefault(u => u.Email == userName);
-
+            Users user = _context.Users.FirstOrDefault(u => u.Email == userName);
 
             if (User.Identity.IsAuthenticated)
             {
@@ -36,10 +42,10 @@ namespace FinalProject_MVC.Controllers
 
                     if (user.CategoryId == 6)
                     {
-                        var availableApartments = db.Apartments
-                        .Include(a => a.Property)
-                        .Where(a => a.StatusId == 1)
-                        .ToList();
+                        var availableApartments = _context.Apartments
+                            .Include(a => a.Property)
+                            .Where(a => a.StatusId == 1)
+                            .ToList();
 
                         ViewBag.AvailableApartments = availableApartments;
 
@@ -48,17 +54,17 @@ namespace FinalProject_MVC.Controllers
 
                     if (user.CategoryId == 7)
                     {
-                        var messageExists = db.Messages
-                        .Include(a => a.Apartment)
-                        .Where(a => a.Apartment.ManagerId == userId)
-                        .ToList();
+                        var messageExists = _context.Messages
+                            .Include(a => a.Apartment)
+                            .Where(a => a.Apartment.ManagerId == userId)
+                            .ToList();
 
                         ViewBag.MessageExists = messageExists;
 
-                        var appointmentExists = db.Appointments
-                        .Include(a => a.Apartment)
-                        .Where(a => a.Apartment.ManagerId == userId)
-                        .ToList();
+                        var appointmentExists = _context.Appointments
+                            .Include(a => a.Apartment)
+                            .Where(a => a.Apartment.ManagerId == userId)
+                            .ToList();
 
                         ViewBag.AppointmentExists = appointmentExists;
 
@@ -68,7 +74,7 @@ namespace FinalProject_MVC.Controllers
                 else
                 {
                     TempData["Message"] = "Username or Password is wrong";
-                    return Redirect("Login");
+                    return RedirectToAction("Login");
                 }
             }
             else
@@ -92,23 +98,62 @@ namespace FinalProject_MVC.Controllers
 
             return View();
         }
-        public ActionResult Login()
+
+        public ActionResult Login(string returnUrl)
         {
             ViewBag.Message = "Your Login page.";
-
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public ActionResult Login(string userName, string password)
+        public ActionResult Login(string userName, string password, string returnUrl)
         {
-            bool isAuthenticated = AuthenticateUser(userName, password);
+            var user = _context.Users.FirstOrDefault(u => u.Email == userName);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "Invalid username or password.";
+                return View();
+            }
+
+            TempData["Category"] = user.Category;
+
+            bool isAuthenticated = _authService.AuthenticateUser(userName, password, user.CategoryId);
 
             if (isAuthenticated)
             {
+                DateTime expirationTime = DateTime.Now.AddSeconds(30);
+
+                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                    1,                              // Version
+                    userName,                       // User's name (in this case, the username)
+                    DateTime.Now,                   // Issue time
+                    expirationTime,                 // Expiration time
+                    false,                          // Persistent cookie
+                    String.Empty                    // User data (optional)
+                );
+
+                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+
+                string cookieName = "MyCustomAuthCookie";
+
+                HttpCookie authCookie = new HttpCookie(cookieName, encryptedTicket);
+
+                authCookie.Expires = expirationTime;
+
+                Response.Cookies.Add(authCookie);
+
                 FormsAuthentication.SetAuthCookie(userName, false);
 
-                return RedirectToAction("Index", "Home");
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             else
             {
@@ -124,10 +169,6 @@ namespace FinalProject_MVC.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        private bool AuthenticateUser(string userName, string password)
-        {
-            return true;
-        }
 
         public ActionResult SignUp()
         {
@@ -135,19 +176,73 @@ namespace FinalProject_MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult SignUp(string firstName, string lastName, string email, string password)
+        public ActionResult SignUp(string firstName, string lastName, string email, string password, HttpPostedFileBase image)
         {
+            FormsAuthentication.SignOut();
+
+            // Check if the email is already registered
+            var existingUser = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (existingUser != null)
+            {
+                ViewBag.ErrorMessage = "Email is already registered.";
+                return View();
+            }
+
+            byte[] imageData = null;
+            if (image != null)
+            {
+                using (var binaryReader = new BinaryReader(image.InputStream))
+                {
+                    imageData = binaryReader.ReadBytes(image.ContentLength);
+                }
+            }
+
             var newUser = new Users
             {
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
                 Password = password,
-                CategoryId = 6
+                CategoryId = 6,
+                Image = imageData
             };
-            db.Users.Add(newUser);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            bool isAuthenticated = _authService.AuthenticateUser(email, password, newUser.CategoryId);
+
+            if (isAuthenticated)
+            {
+                DateTime expirationTime = DateTime.Now.AddSeconds(30);
+
+                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                    1,                              // Version
+                    email,                          // User's name (in this case, the username)
+                    DateTime.Now,                   // Issue time
+                    expirationTime,                 // Expiration time
+                    false,                          // Persistent cookie
+                    String.Empty                    // User data (optional)
+                );
+
+                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+
+                string cookieName = "MyCustomAuthCookie";
+
+                HttpCookie authCookie = new HttpCookie(cookieName, encryptedTicket);
+
+                authCookie.Expires = expirationTime;
+
+                Response.Cookies.Add(authCookie);
+
+                FormsAuthentication.SetAuthCookie(email, false);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Invalid username or password.";
+                return View();
+            }
         }
     }
 }

@@ -4,15 +4,12 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
-
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
-<div class="form-horizontal">
-    <h4>Events</h4>
+<div class="login_card sign_up">
+    <h4>Do you want to edit this event?</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.EventId)

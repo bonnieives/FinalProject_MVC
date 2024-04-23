@@ -4,65 +4,64 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div id="index_properties" style="background: white; border-radius: 20px; display:
+          flex; flex-direction: column; width: 90%; height: fit-content; align-items:
+                    center; justify-content: center; border: 2px solid black; margin: auto;
+                            margin-top: 20px; margin-bottom: 20px;
+                            padding: 20px;
+">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Apartment Id
-        </th>
-        <th>
-            Apartment Full Address
-        </th>
-        <th>
-            Apartment Number
-        </th>
-        <th>
-            Owner
-        </th>
-        <th>
-            Manager
-        </th>
-        <th>
-            Status
-        </th>
-        <th></th>
-    </tr>
+    <div class="properties_header">
+        <h2>List of Apartments</h2>
+        @if ((int)@Session["CurrentCategoryId"] == 4 || (int)@Session["CurrentCategoryId"] == 5)
+        {
+            <p class="button-access-profile">
+                @Html.ActionLink("Create New", "Create")
+            </p>
+        }
+    </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ApartmentId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Property.CivicNumber) @Html.DisplayFor(modelItem => item.Property.Address),
-            @Html.DisplayFor(modelItem => item.Property.Zip), @Html.DisplayFor(modelItem => item.Property.City), @Html.DisplayFor(modelItem => item.Property.Province)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ApartmentNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status.StatusDescription)
-        </td>
-        <td>
-            @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 7)
-            {
-                @Html.ActionLink("Edit", "Edit", new { id = item.ApartmentId }) <span>|</span>
-                @Html.ActionLink("Delete", "Delete", new { id = item.ApartmentId }) <span>|</span>
-            }
-            @Html.ActionLink("Details", "Details", new { id = item.ApartmentId })
+    <hr />
+    @foreach (var item in Model)
+    {
+        <div class="apartment_card">
+            <div class="apartment_picture">
+                @if (item.Image != null && item.Image.Length > 0)
+                {
+                    string base64Image = Convert.ToBase64String(item.Image);
+                    string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+                    <img class="apartment_picture" src="@imgSrc" alt="User Picture" />
+                }
+                else
+                {
+                    <img class="apartment_picture" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+                }
+            </div>
+            <div class="apartment_description">
+                <h5>@Html.DisplayFor(modelItem => item.ApartmentTitle)</h5>
+                <p>Your Manager: <span>@Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)</span></p>
+                <p>The Owner: <span>@Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)</span></p>
+                <p>
+                    Full address: <span>
+                        @Html.DisplayFor(modelItem => item.ApartmentNumber) - @Html.DisplayFor(modelItem => item.Property.CivicNumber) @Html.DisplayFor(modelItem => item.Property.Address),
+                        @Html.DisplayFor(modelItem => item.Property.Zip), @Html.DisplayFor(modelItem => item.Property.City), @Html.DisplayFor(modelItem => item.Property.Province)
+                    </span>
+                </p>
+                <p>Current Status: <span>@Html.DisplayFor(modelItem => item.Status.StatusDescription)</span></p>
+            </div>
+            <div class="buttons_div_pics">
+                <td>
+                    @if ((int)@Session["CurrentCategoryId"] == 4 || (int)@Session["CurrentCategoryId"] == 5)
+                    {
+                        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = item.ApartmentId })</p>
+                        <p class="button-access-profile">@Html.ActionLink("Delete", "Delete", new { id = item.ApartmentId })</p>
+                    }
+                    <p class="button-access-profile">@Html.ActionLink("Details", "Details", new { id = item.ApartmentId })</p>
 
-        </td>
-    </tr>
-}
+                </td>
+            </div>
+        </div>
+    }
 
-</table>
+    </div>
+

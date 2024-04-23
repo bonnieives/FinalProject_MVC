@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services.Description;
+using FinalProject_MVC.Authorization;
 using FinalProject_MVC.DAL;
 using FinalProject_MVC.Models;
 
@@ -75,7 +77,25 @@ namespace FinalProject_MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Messages messages = db.Messages.Include(a => a.Sender).Include(a => a.Apartment).FirstOrDefault(a => a.MessageId == id);
+            Messages messages = db.Messages
+                .Include(a => a.Sender)
+                .Include(a => a.Apartment)
+                .Include(a => a.Apartment.Manager)
+                .FirstOrDefault(a => a.MessageId == id);
+
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            var ownerMessageId = db.Messages.
+                Include(c => c.Apartment).
+                Where(c => c.Apartment.OwnerId == currentUserId).
+                Select(c => c.MessageId).
+                ToList();
+
+            var tenantManagerMessageId = db.Messages.
+                Where(c => c.SenderId == currentUserId || c.ReceiverId == currentUserId).
+                Select(c => c.MessageId).
+                ToList();
 
             if (messages == null)
             {
@@ -84,10 +104,27 @@ namespace FinalProject_MVC.Controllers
 
             ViewBag.UserName = messages.Sender.FirstName;
 
+            if (currentCategoryId != 4)
+            {
+                if (id.HasValue && ownerMessageId.Contains(id.Value))
+                {
+                    return View(messages);
+                }
+                else if (id.HasValue && tenantManagerMessageId.Contains(id.Value))
+                {
+                    return View(messages);
+                }
+                else
+                {
+                    return View("~/Views/Shared/Error.cshtml");
+                }
+            }
+
             return View(messages);
         }
 
         // GET: Messages/Create
+        [CategoryAuthorize(6, 7)]
         public ActionResult Create(int id)
         {
             var apartments = db.Apartments
@@ -145,6 +182,7 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6, 7)]
         public ActionResult Create([Bind(Include = "MessageId,Description,ApartmentId")] Messages message)
         {
             if (ModelState.IsValid)
@@ -206,6 +244,7 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Messages/Edit/5
+        [CategoryAuthorize(6, 7)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -213,10 +252,18 @@ namespace FinalProject_MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Messages messages = db.Messages.Find(id);
-            if (messages == null)
+            Messages message = db.Messages.Find(id);
+            if (message == null)
             {
                 return HttpNotFound();
+            }
+
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            if (message.SenderId != currentUserId)
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             var apartments = db.Apartments
@@ -233,20 +280,24 @@ namespace FinalProject_MVC.Controllers
 
             MessageModel model = new MessageModel
             {
-                MessageId = messages.MessageId,
-                Description = messages.Description,
-                ApartmentId = messages.ApartmentId,
-                SenderId = messages.SenderId,
+                MessageId = message.MessageId,
+                Description = message.Description,
+                ApartmentId = message.ApartmentId,
+                SenderId = message.SenderId,
             };
 
             return View(model);
         }
+
+
+
 
         // POST: Messages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6, 7)]
         public ActionResult Edit(MessageModel model)
         {
             if (ModelState.IsValid)
@@ -276,23 +327,36 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Messages/Delete/5
+        [CategoryAuthorize(6, 7)]
         public ActionResult Delete(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Messages messages = db.Messages.Find(id);
-            if (messages == null)
+
+            Messages message = db.Messages.Find(id);
+            if (message == null)
             {
                 return HttpNotFound();
             }
-            return View(messages);
+
+            if (message.SenderId == currentUserId)
+            {
+                return View(message);
+            }
+            else
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
         }
 
         // POST: Messages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6, 7)]
         public ActionResult DeleteConfirmed(int id)
         {
             Messages messages = db.Messages.Find(id);

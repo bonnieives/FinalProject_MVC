@@ -4,10 +4,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Appointment Information</h4>
+<div class="login_card sign_up">
+    <h4>Message Information</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -41,11 +39,12 @@
             @Html.DisplayFor(model => model.Apartment.Manager.FirstName) @Html.DisplayFor(model => model.Description)
         </dd>
     </dl>
+    <p class="button-access-profile">
+        @if ((int)@Session["CurrentCategoryId"] == 6)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.MessageId })
+        }
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 </div>
-<p>
-    @if ((int)@Session["CurrentCategoryId"] == 6)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.MessageId }) <span>|</span>
-    }
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

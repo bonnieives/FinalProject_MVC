@@ -2,25 +2,91 @@
     ViewBag.Title = "Sign Up";
 }
 
-<main>
-    @using (Html.BeginForm("SignUp", "Home", FormMethod.Post))
+<main class="login_card sign_up">
+    @using (Html.BeginForm("SignUp", "Home", FormMethod.Post, new { id = "signupForm", enctype = "multipart/form-data" }))
     {
-        <div>
+        <div class="sign_up_div">
             <h2>Sign Up</h2>
+            <hr />
             <br />
-            <label for="txtFirstName">First Name:</label>
-            <input type="text" id="txtFirstName" name="firstName" />
-            <br />
-            <label for="txtLastName">Last Name:</label>
-            <input type="text" id="txtLastName" name="lastName" />
-            <br />
-            <label for="txtEmail">Email:</label>
-            <input type="email" id="txtEmail" name="email" />
-            <br />
-            <label for="txtPassword">Password:</label>
-            <input type="password" id="txtPassword" name="password" />
-            <br />
-            <button type="submit">Sign Up</button>
+            <div class="sign_up_row">
+                <div>
+                    <label for="txtFirstName">First Name</label>
+                    <input type="text" id="txtFirstName" name="firstName" />
+                    <span id="firstNameError" class="text-danger" style="display: none;"></span> <!-- Add this span -->
+                    <br />
+                    <label for="txtLastName">Last Name</label>
+                    <input type="text" id="txtLastName" name="lastName" />
+                    <span id="lastNameError" class="text-danger" style="display: none;"></span> <!-- Add this span -->
+                    <br />
+                </div>
+                <div>
+                    <label for="txtEmail">Email</label>
+                    <input type="email" id="txtEmail" name="email" />
+                    <span id="emailError" class="text-danger" style="display: none;"></span> <!-- Add this span -->
+                    <br />
+                    <label for="txtPassword">Password</label>
+                    <input type="password" id="txtPassword" name="password" />
+                    <span id="passwordError" class="text-danger" style="display: none;"></span> <!-- Add this span -->
+                    <br />
+                </div>
+            </div>
+            <div>
+                <label for="fileImage">Upload Picture</label>
+                <input type="file" id="fileImage" name="image" accept="image/*" />
+                <p style="font-weight:bold; color:red">@ViewBag.ErrorMessage</p>
+                <br />
+                <hr />                
+                <button type="submit" style="width: 60%;">Sign Up</button>
+            </div>
         </div>
     }
 </main>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#signupForm").submit(function (event) {
+                event.preventDefault();
+
+                var firstName = $("#txtFirstName").val().trim();
+                var lastName = $("#txtLastName").val().trim();
+                var email = $("#txtEmail").val().trim();
+                var password = $("#txtPassword").val().trim();
+
+                var letterRegex = /^[a-zA-Z]+$/;
+                var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+                // Reset previous error messages
+                $(".text-danger").hide();
+
+                if (firstName === "" || lastName === "" || email === "" || password === "") {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                if (!firstName.match(letterRegex)) {
+                    $("#firstNameError").text("First name should contain only letters.").show();
+                    return;
+                }
+
+                if (!lastName.match(letterRegex)) {
+                    $("#lastNameError").text("Last name should contain only letters.").show();
+                    return;
+                }
+
+                if (!email.match(emailRegex)) {
+                    $("#emailError").text("Invalid email format.").show();
+                    return;
+                }
+
+                if (password.length < 8 || password.length > 12) {
+                    $("#passwordError").text("Password must be between 8 and 12 characters.").show();
+                    return;
+                }
+
+                $(this).off("submit").submit();
+            });
+        });
+    </script>
+}

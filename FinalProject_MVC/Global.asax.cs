@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FinalProject_MVC.DAL;
+using FinalProject_MVC.DI;
+using FinalProject_MVC.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -18,7 +21,14 @@ namespace FinalProject_MVC
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-        }
 
+            // Create an instance of FinalProjectContext
+            var dbContext = new FinalProjectContext();
+            // Create an instance of DIContainer with FinalProjectContext as a parameter
+            DIContainer container = new DIContainer(dbContext);
+
+            // Set the resolver with the container
+            DependencyResolver.SetResolver(container);
+        }
     }
 }

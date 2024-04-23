@@ -4,74 +4,71 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-<h5>Your messages</h5>
-<h5>ID number: @Session["CurrentUserId"]</h5>
+<div class="login_card sign_up card_index">
 
-@if ((int)@Session["CurrentCategoryId"] == 6)
-{
-    <p>
-        @Html.ActionLink("Create New", "Create", new { id = -1 })
-    </p>
-}
+    <div class="header_text">
+        <h5>Your messages</h5>
 
-<table class="table">
-    <tr>
-        <th>
-            Message ID
-        </th>
-        <th>
-            Sender
-        </th>
-        <th>
-            Property Address
-        </th>
-        <th>
-            Apartment Number
-        </th>
-        <th>
-            Receiver
-        </th>
-        <th></th>
-    </tr>
+        @if ((int)@Session["CurrentCategoryId"] == 6)
+        {
+            <p class="button-access-profile">
+                @Html.ActionLink("Create New", "Create", new { id = -1 })
+            </p>
+        }
+    </div>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MessageId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sender.FirstName)  @Html.DisplayFor(modelItem => item.Sender.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.Property.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Receiver.FirstName) @Html.DisplayFor(modelItem => item.Receiver.LastName)
-            </td>
-            <td>
-                @if ((int)@Session["CurrentUserId"] == item.SenderId)
-                {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.MessageId })  <span>|</span>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })  <span>|</span>
-                }
-                @if ((int)@Session["CurrentUserId"] != item.SenderId)
-                {
-                    if ((int)@Session["CurrentCategoryId"] == 7)
+    <div class="cards_container_text">
+        @foreach (var item in Model)
+        {
+            <div class="card_text_sender_div">
+                <p>
+                    Sender:
+                    <span>@Html.DisplayFor(modelItem => item.Sender.FirstName)  @Html.DisplayFor(modelItem => item.Sender.LastName)</span>
+                </p>
+                <p>
+                    Receiver:
+                    <span>@Html.DisplayFor(modelItem => item.Receiver.FirstName) @Html.DisplayFor(modelItem => item.Receiver.LastName)</span>
+                </p>
+                <hr />
+                <p>
+                    Full address:
+                    <span>
+                        @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber) -
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber)
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Zip),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.City),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Province)
+                    </span>
+                </p>
+                <hr />
+                <p>
+                    Your message:
+                    <span>@Html.DisplayFor(modelItem => item.Description)</span>
+                </p>
+                <hr />
+
+                <div class="buttons_div_text">
+                    @if ((int)@Session["CurrentUserId"] == item.SenderId)
                     {
-                        @Html.ActionLink("Answer", "Create", new { id = item.MessageId })  <span>|</span>
-                    }
-                }
-                @Html.ActionLink("Details", "Details", new { id = item.MessageId })
-            </td>
-        </tr>
-        <tr>
-            <td style="border-bottom:2px solid black;" colspan="6"><h5>Message: </h5>@Html.DisplayFor(modelItem => item.Description)</td>
-        </tr>
-    }
+                        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = item.MessageId })</p>
+                        <p class="button-access-profile">
+                            @Html.ActionLink("Delete", "Delete", new { id = item.MessageId })</p>
+                        }
+                        @if ((int)@Session["CurrentUserId"] != item.SenderId)
+                        {
+                            if ((int)@Session["CurrentCategoryId"] == 7)
+                            {
+                            <p class="button-access-profile">
+                                @Html.ActionLink("Answer", "Create", new { id = item.MessageId })</p>
+                            }
+                            }
+                        <p class="button-access-profile">@Html.ActionLink("Details", "Details", new { id = item.MessageId })</p>
+                    </div>
+            </div>
+        }
+    </div>
 
-</table>
+
+</div>
+

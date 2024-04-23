@@ -1,48 +1,49 @@
 ﻿<!DOCTYPE html>
-<html>
+<html style="padding: 15vh 0; background-image: url('/Pictures/background_picture.jpg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Property Rental Managemnt Web Site</title>
+    <title>@ViewBag.Title - Property Rental Management Web Site</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/layout_navbar.css")
 </head>
-<body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
+<body style="height: 100%; 
+        margin: 0; 
+        padding: 0; 
+        background-color:transparent;" >
+
+    <div class="shared-navbar-div" style="position: fixed; top: 0;">
+        <div class="title-site">
             @Html.ActionLink("Property Rental Management Web Site", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    @if (User.Identity.IsAuthenticated && @Session["CurrentCategoryId"] != null)
-                    {
-
-                        <li>@Html.ActionLink("Appointments", "Index", "Appointments", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Contracts", "Index", "Contracts", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Messages", "Index", "Messages", new { area = "" }, new { @class = "nav-link" })</li>
-
-                        if (@Session["CurrentCategoryId"] != null && (int)@Session["CurrentCategoryId"] != 6)
-                        {
-                            <li>@Html.ActionLink("Properties", "Index", "Properties", new { area = "" }, new { @class = "nav-link" })</li>
-                            <li>@Html.ActionLink("Events", "Index", "Events", new { area = "" }, new { @class = "nav-link" })</li>
-                        }
-
-                        <li>@Html.ActionLink("Logout", "Logout", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-
-                    }
-                </ul>
-            </div>
         </div>
-    </nav>
-    <div class="container body-content">
+        <nav>
+            <ul class="navbar-nav flex-grow-1">
+                @if (User.Identity.IsAuthenticated && @Session["CurrentCategoryId"] != null)
+                {
+
+                    <li>@Html.ActionLink("Appointments", "Index", "Appointments", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Contracts", "Index", "Contracts", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Messages", "Index", "Messages", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    if (@Session["CurrentCategoryId"] != null && (int)@Session["CurrentCategoryId"] != 6)
+                    {
+                        <li>@Html.ActionLink("Properties", "Index", "Properties", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Events", "Index", "Events", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+
+                    <li>@Html.ActionLink("Logout", "Logout", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                }
+            </ul>
+        </nav>
+    </div>
+
+    <div class="body_main" style="padding: 5% 0; height: 100vh;">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Property Rental Managemnt Web Site</p>
+        <footer style="height: 5%; width: 100%; position: fixed; bottom: 0; ">
+            <p>&copy; @DateTime.Now.Year - Property Rental Management Web Site</p>
         </footer>
     </div>
 

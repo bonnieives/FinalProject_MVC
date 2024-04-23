@@ -4,15 +4,12 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
-
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data", id = "signupForm" }))
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Users</h4>
+
+<div class="login_card sign_up">
+    <h4>Edit Profile</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.UserId)
@@ -20,93 +17,150 @@
     <div class="form-group">
         @Html.LabelFor(model => model.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", id = "txtFirstName" } })
             @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            <span id="firstNameError" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.LastName, "Last Name", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", id = "txtLastName" } })
             @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            <span id="lastNameError" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.Email, "Email", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", id = "txtEmail" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            <span id="emailError" class="text-danger"></span>
+        </div>
+    </div>
+
+    @if ((int)Session["CurrentCategoryId"] != 6 || (int)Session["CurrentCategoryId"] != 7)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CategoryId, new SelectList(new[]
+                {
+                    new SelectListItem { Text = "Administrator", Value = "4" },
+                    new SelectListItem { Text = "Owner", Value = "5" },
+                    new SelectListItem { Text = "Tenant", Value = "6" },
+                    new SelectListItem { Text = "Manager", Value = "7" }
+                }, "Value", "Text"), "Select Category", new { @class = "form-control", id = "categoryId" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(model => model.CategoryId)
+    }
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="file" id="image" />
+            <input type="hidden" id="base64" name="base64" />
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "password" })
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            <button type="button" id="changePasswordBtn" class="button-access-profile" style="width: 45%; margin: 10px 0;" onclick="togglePasswordFields()">Change Password</button>
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.Label("Confirm Password", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.Password("ConfirmPassword", null, new { @class = "form-control", id = "confirmPassword" })
-            <span id="confirmPasswordError" class="text-danger"></span>
+    <div id="passwordFields" style="display: none;">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, "New Password", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "password" })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Confirm New Password", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Password("ConfirmPassword", null, new { @class = "form-control", id = "confirmPassword" })
+                <span id="confirmPasswordError" class="text-danger"></span>
+            </div>
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.CategoryId, new SelectList(new[]
-            {
-                new SelectListItem { Text = "Administrator", Value = "4" },
-                new SelectListItem { Text = "Owner", Value = "5" },
-                new SelectListItem { Text = "Tenant", Value = "6" },
-                new SelectListItem { Text = "Manager", Value = "7" }
-            }, "Value", "Text"), "Select Category", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            $('#categoryId').change(function () {
-                var selectedItem = $(this).find(':selected').text();
-                alert('Selected Category: ' + selectedItem);
-            });
-        });
-    </script>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />
         </div>
     </div>
+    <hr />
+    <div>
+        <p class="button-access-profile">@Html.ActionLink("Back to List", "Index")</p>
+        <p class="button-access-profile">@Html.ActionLink("Delete Account", "Delete", new { id = Model.UserId }, null)</p>
+    </div>
+
 </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index") |
-    @Html.ActionLink("Delete Account", "Delete", new { id = Model.UserId }, null)
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $('#password, #confirmPassword').keyup(function () {
+                var password = $('#password').val();
+                var confirmPassword = $('#confirmPassword').val();
+                if (password !== confirmPassword) {
+                    $('#confirmPasswordError').text('Passwords must match');
+                } else {
+                    $('#confirmPasswordError').text('');
+                }
+            });
+        });
+
+        document.getElementById('image').addEventListener('change', function () {
+            var reader = new FileReader();
+            console.log(reader)
+            reader.onloadend = function () {
+                var base64String = reader.result;
+                var base64WithoutPrefix = base64String.split(',')[1];
+                document.getElementById('base64').value = base64WithoutPrefix;
+                console.log(document.getElementById('base64').value)
+            }
+            reader.readAsDataURL(this.files[0]);
+            console.log(this.files[0])
+        });
+
+        function togglePasswordFields() {
+            var passwordFields = document.getElementById('passwordFields');
+            var passwordInput = document.getElementById('password');
+            var confirmPasswordInput = document.getElementById('confirmPassword');
+            var oldPasswordInput = document.getElementById('OldPassword');
+
+            if (passwordFields.style.display === 'none') {
+                passwordFields.style.display = 'block';
+            } else {
+                passwordFields.style.display = 'none';
+                passwordInput.value = oldPasswordInput.value;
+                confirmPasswordInput.value = oldPasswordInput.value;
+            }
+        }
+
+
+    </script>
+
 }
 
-<script>
-    $(document).ready(function () {
-        $('#password, #confirmPassword').keyup(function () {
-            var password = $('#password').val();
-            var confirmPassword = $('#confirmPassword').val();
-            if (password !== confirmPassword) {
-                $('#confirmPasswordError').text('Passwords must match');
-            } else {
-                $('#confirmPasswordError').text('');
-            }
-        });
-    });
-</script>

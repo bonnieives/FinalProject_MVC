@@ -127,6 +127,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Authorization\CategoryAutorizeAttribute.cs" />
     <Compile Include="Controllers\AppointmentsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ContractsController.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DbContext.cs" />
     <Compile Include="DAL\FinalProjectInitializeData.cs" />
+    <Compile Include="DI\DIContainer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -156,6 +158,10 @@
     <Compile Include="Migrations\202404110006461_901.Designer.cs">
       <DependentUpon>202404110006461_901.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202404171404087_AddApartmentTitle5.cs" />
+    <Compile Include="Migrations\202404171404087_AddApartmentTitle5.Designer.cs">
+      <DependentUpon>202404171404087_AddApartmentTitle5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Apartments.cs" />
     <Compile Include="Controllers\ApartmentsController.cs" />
@@ -167,15 +173,18 @@
     <Compile Include="Models\Contracts.cs" />
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\Events.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\Properties.cs" />
     <Compile Include="Models\PropertyApartmentModel.cs" />
     <Compile Include="Models\PropertyModel.cs" />
     <Compile Include="Models\Status.cs" />
+    <Compile Include="Models\UserApartmentsViewModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IAuthService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -194,10 +203,13 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\layout_navbar.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Login.aspx" />
+    <Content Include="Pictures\background_picture.jpg" />
+    <Content Include="Pictures\placeholder.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -313,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202404110006461_901.resx">
       <DependentUpon>202404110006461_901.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404171404087_AddApartmentTitle5.resx">
+      <DependentUpon>202404171404087_AddApartmentTitle5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

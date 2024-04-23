@@ -4,10 +4,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Events</h4>
+<div class="login_card sign_up">
+    <h4>Details about the event</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -60,11 +58,12 @@
         </dd>
 
     </dl>
+    <p class="button-access-profile">
+        @if ((int)@Session["CurrentCategoryId"] == 7)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.EventId })
+        }
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 </div>
-<p>
-    @if ((int)@Session["CurrentCategoryId"] == 7)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.EventId }) <span>|</span>
-    }
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

@@ -1,0 +1,402 @@
+﻿/*  NAVBAR */
+.shared-navbar-div {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 0 4px 6px black;
+}
+
+.title-site {
+    padding: 20px;
+    font-size: 20px;
+}
+
+.shared-navbar-div nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.shared-navbar-div ul.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    padding: 10px 0;
+    background-color: #393939;
+}
+
+.shared-navbar-div ul.navbar-nav li {
+    margin-right: 10px;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-size: 14px;
+
+}
+
+.shared-navbar-div ul.navbar-nav li:hover {
+    background: white;
+    color: black;
+    box-shadow: 0 4px 6px black;
+}
+
+.shared-navbar-div ul.navbar-nav li:last-child {
+    margin-right: 0; 
+}
+
+/* FOOTER */
+footer {
+    background: black;
+    color: white;
+    width: 100%;
+    height: 100%;
+    align-content: center;
+}
+
+/* MAIN BACKGROUND */
+
+.body_main {
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+}
+
+.body_main p {
+    padding-top: 10px;
+}
+
+/* LOGIN VIEW */
+.login_card {
+    padding: 40px 20px;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    width: fit-content;
+    border-radius: 10px;
+    margin: 100px auto;
+    box-shadow: 0 4px 6px black;
+    background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+}
+.login_card div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+    .login_card input {
+        margin: 10px 0px;
+        text-align: center;
+        box-shadow: 0 4px 6px #443B3B;
+        border: 1px solid #443B3B;
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        padding: 5px 0;
+    }
+
+.login_card button {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px 0;
+    box-shadow: 0 4px 6px #443B3B;
+}
+
+.login_card button:hover {
+    background: #443B3B;
+    color: white;
+}
+
+.login_card p {
+    margin-top:20px;
+}
+
+/* SIGN UP */
+
+.sign_up_div {
+    display: flex;
+    flex-direction: column;
+}
+
+.sign_up {
+    width: 40%;
+}
+
+.sign_up input {
+    width: 100%
+}
+
+/* INDEX */
+
+.index-section {
+    padding: 40px 20px;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin: 100px auto;
+    box-shadow: 0 4px 6px black;
+    background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+}
+
+.header-name-email{
+    text-align: left;
+}
+
+.index-section .header-index-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.img-index {
+    width: 100px;
+    height: auto;
+    border: 1px solid black;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+.button-access-profile a {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: black !important;
+    background-color: rgba(57, 57, 57, 0.2);
+    box-shadow: 0 4px 6px #443B3B !important;
+}
+
+.button-access-profile a:hover {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 5px 10px;
+    background-color: black;
+    text-decoration: none;
+    color: white !important;
+}
+
+/* Cards for index text */
+
+.card_index {
+    width: 90%;
+}
+
+.card_index .cards_container_text{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card_index .card_text_sender_div {
+    background-color: #f0f0f0;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 25%;
+    margin: 20px;
+    height: fit-content;
+    padding: 10px 5px;
+    text-align:start;
+}
+
+.card_index .card_text_sender_div:hover {
+    box-shadow: 0 4px 6px #443B3B;
+}
+
+.card_index .card_text_sender_div p{
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    width: 100%
+}
+
+.card_index .card_text_sender_div span{
+    font-weight: normal;
+}
+
+.card_index .card_text_sender_div hr{
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    margin: 5px 0;
+}
+
+.custom_label {
+    width: 100%;
+    text-align: center;
+}
+
+.buttons_div_text{
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100%;
+    padding: 10px;
+    justify-content: space-between !important;
+    align-items: center;
+}
+
+/* Divs with pictures */
+
+.index_pictures {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 90%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+.card_picture {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #F0F0F0;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    width: fit-content;
+    height: 20%;
+    margin: 10px;
+}
+
+.card_picture:hover {
+    box-shadow: 0 4px 6px #443B3B;
+}
+
+.div-picture {
+    height: 100%;
+}
+
+.div-picture img{
+    height: 100%;
+}
+
+.user-information span {
+    font-weight: bold;
+}
+
+.user-information {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    padding: 0 10px;
+    margin: 0 10px;
+}
+
+.buttons_div_pics {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.subdiv-pictures {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Divs for properties */
+
+#index_properties {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+.properties_header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.apartment_card {
+    display: flex;
+    flex-direction: row;
+    background-color: #F0F0F0;
+    height: fit-content;
+    width: 90%;
+    border: 2px solid black;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.apartment_picture {
+    display: flex;
+    justify-content: left;
+    align-content:center;
+    
+}
+
+.apartment_picture {
+    width: 300px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.apartment_description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    justify-content: left;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 10px 15px;
+    margin: 5px 0;
+}
+
+.apartment_description p {
+    font-weight: bold;
+}
+
+.apartment_description span {
+    font-weight: normal;
+}
+
+/* For contracts */
+.login.sign_up.contract_card {
+    background-color: #F0F0F0;
+}
+
+.contract_description p {
+    padding: 0px;
+}

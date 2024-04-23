@@ -5,63 +5,88 @@
 }
 
 <main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">Property Rental Management Web Site</h1>
-        <h4>Welcome, @Model.FirstName @Model.LastName!</h4>
-        <h5>Email: @Model.Email</h5>
-        <h5>@Html.ActionLink("Access you profile", "Edit", "Users", new { id = Model.UserId }, null)</h5>
-        <p>ID Number: @Model.UserId</p>
-        <p>
-            Category:
-            @if (@Model.CategoryId == 4)
-            {
-                <text>Administrator</text>
-            }
-            else if (@Model.CategoryId == 5)
-            {
-                <text>Owner</text>
-            }
-            else if (@Model.CategoryId == 6)
-            {
-                <text>Tenant</text>
-            }
-            else if (@Model.CategoryId == 7)
-            {
-                <text>Manager</text>
-            }
-        </p>
+    <section class="index-section" aria-labelledby="aspnetTitle" style="width: 90%;">
+        <div class="header-index-section" style="display:flex; align-items: center; justify-content: left; width: 90%;">
+            <div>
+                @if (Model.Image != null && Model.Image.Length > 0)
+                {
+                    string base64Image = Convert.ToBase64String(Model.Image);
+                    string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+                    <img style="width: 70%" class="img-index" src="@imgSrc" alt="User Picture" />
+                }
+                else
+                {
+                    <img style="width: 70%" class="img-index" class="img-index" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+                }
+            </div>
+            <div class="header-name-email">
+                <h1>Welcome, @Model.FirstName @Model.LastName!</h1>
+                <h5>@Model.Email</h5>
+                <p>
+                    @if (@Model.CategoryId == 4)
+                    {
+                        <text>Administrator</text>
+                    }
+                    else if (@Model.CategoryId == 5)
+                    {
+                        <text>Owner</text>
+                    }
+                    else if (@Model.CategoryId == 6)
+                    {
+                        <text>Tenant</text>
+                    }
+                    else if (@Model.CategoryId == 7)
+                    {
+                        <text>Manager</text>
+                    }
+                </p>
+                <h5 class="button-access-profile">@Html.ActionLink("Access you profile", "Edit", "Users", new { id = Model.UserId }, null)</h5>
+            </div>
+        </div>
+        <hr />
 
         @if ((int)@Session["CurrentCategoryId"] == 6)
-        {
-            <table>
-                <thead>
-                    <tr>
-                        <th>Apartment Number</th>
-                        <th>Address</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                @if (ViewBag.AvailableApartments != null)
+        {       
+                if (ViewBag.AvailableApartments != null)
                 {
                     <h3>Please check out our available properties!</h3>
                 }
 
-                <tbody>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                     @foreach (var property in ViewBag.availableApartments)
                     {
-                        <tr style="border-top: 1px solid black; margin: 0 auto;">
-                            <td>@property.ApartmentNumber</td>
-                            <td>@property.Property.CivicNumber @property.Property.Address @property.Property.Zip @property.Property.City</td>
-                            <td>
-                                @Html.ActionLink("Schedule Appointment", "Create", "Appointments", new { propertyId = property.PropertyId }, null) |
-                                @Html.ActionLink("Send Message", "Create", "Messages", new { propertyId = property.PropertyId }, null) |
-                                @Html.ActionLink("See Apartment", "Details", "Apartments", new { id = property.ApartmentId }, null)
-                            </td>
-                        </tr>
+                        <div style="display:flex; 
+                                flex-direction: row; 
+                                align-items: center; 
+                                justify-content: space-evenly; 
+                                margin: 0 auto; 
+                                width: 90%;
+                                border: 2px solid black;
+                                margin: 10px 0;
+                                border-radius: 10px;
+                                padding: 10px 0;
+                                background-color: #F0F0F0;">
+                            <div>
+                                @if (property.Image != null && property.Image.Length > 0)
+                                {
+                                    string base64Image = Convert.ToBase64String(property.Image);
+                                    string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+                                    <img class="apartment_picture" src="@imgSrc" alt="User Picture" />
+                                }
+                                else
+                                {
+                                    <img class="apartment_picture" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+                                }
+                            </div>
+                            <div style="display:flex; flex-direction: row; flex-wrap:wrap; align-items: center; justify-content: center;">@property.ApartmentNumber - @property.Property.CivicNumber @property.Property.Address @property.Property.Zip @property.Property.City</div> 
+                            <div style="display:flex; flex-direction: column; flex-wrap:wrap; align-items: center; justify-content: center;">
+                                <p class="button-access-profile">@Html.ActionLink("Schedule Appointment", "Create", "Appointments", new { propertyId = property.PropertyId }, null)</p>
+                            <p class="button-access-profile">@Html.ActionLink("Send Message", "Create", "Messages", new { propertyId = property.PropertyId }, null)</p>
+                            <p class="button-access-profile">@Html.ActionLink("See Apartment", "Details", "Properties", new { id = property.ApartmentId }, null)</p>
+                            </div>
+                        </div>
                     }
-                </tbody>
-            </table>
+                </div>
         }
 
         @{
@@ -75,16 +100,16 @@
             if (messageExists)
             {
                 <h3>You have new messages</h3>
-                @Html.ActionLink("Go to Messages", "Index", "Messages")
+                <p class="button-access-profile">@Html.ActionLink("Go to Messages", "Index", "Messages")</p>
             }
             if (appointmentExists)
             {
                 <h3>You have new Appointments</h3>
-                @Html.ActionLink("Go to Appointments", "Index", "Appointments")
-            }
-            if (!appointmentExists && !messageExists)
-            {
+                <p class="button-access-profile">@Html.ActionLink("Go to Appointments", "Index", "Appointments")</p>
+                if (!appointmentExists && !messageExists)
+                {
                 <h3>You don't have new Messages or Appointments</h3>
+                }
             }
         }
 

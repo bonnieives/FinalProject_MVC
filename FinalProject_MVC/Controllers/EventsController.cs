@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FinalProject_MVC.Authorization;
 using FinalProject_MVC.DAL;
 using FinalProject_MVC.Models;
 
@@ -16,6 +17,7 @@ namespace FinalProject_MVC.Controllers
         private FinalProjectContext db = new FinalProjectContext();
 
         // GET: Events
+        [CategoryAuthorize(4,5,7)]
         public ActionResult Index()
         {
             int currentUserId = (int)Session["CurrentUserId"];
@@ -60,12 +62,28 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Events/Details/5
+        [CategoryAuthorize(4, 5, 7)]
         public ActionResult Details(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            var apartmentOwnerId = db.Apartments
+                .Where(a => a.OwnerId == currentUserId)
+                .Include(a => a.Property)
+                .Select(a => a.ApartmentId)
+                .ToList();
+
+            var apartmentManaggerId = db.Apartments
+                .Where(a => a.ManagerId == currentUserId)
+                .Include(a => a.Property)
+                .Select(a => a.ApartmentId)
+                .ToList();
 
             Events events = db.Events
                 .Include(a => a.Apartment)
@@ -78,10 +96,28 @@ namespace FinalProject_MVC.Controllers
             {
                 return HttpNotFound();
             }
+
+            if (currentCategoryId != 4)
+            {
+                if (id.HasValue && apartmentOwnerId.Contains(id.Value))
+                {
+                    return View(events);
+                }
+                else if (id.HasValue && apartmentManaggerId.Contains(id.Value))
+                {
+                    return View(events);
+                }
+                else
+                {
+                    return View("~/Views/Shared/Error.cshtml");
+                }
+            }
+
             return View(events);
         }
 
         // GET: Events/Create
+        [CategoryAuthorize(7)]
         public ActionResult Create()
         {
             int currentUserId = (int)Session["CurrentUserId"];
@@ -109,6 +145,7 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(7)]
         public ActionResult Create(Events events)
         {
             if (ModelState.IsValid)
@@ -135,6 +172,7 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Events/Edit/5
+        [CategoryAuthorize(7)]
         public ActionResult Edit(int? id)
         {
             int currentUserId = (int)Session["CurrentUserId"];
@@ -151,13 +189,19 @@ namespace FinalProject_MVC.Controllers
             }
 
             var apartments = db.Apartments
-                .Where(a => a.StatusId == 1 && a.ManagerId == currentUserId)
+                .Where(a => a.ManagerId == currentUserId)
                 .Include(a => a.Property)
                 .Select(a => new SelectListItem
                 {
                     Value = a.ApartmentId.ToString(),
                     Text = a.Property.CivicNumber + " " + a.Property.Address + ", " + a.Property.Zip + ", Apartment Number: " + a.ApartmentNumber
                 })
+                .ToList();
+
+            var apartmentId = db.Apartments
+                .Where(a => a.ManagerId == currentUserId)
+                .Include(a => a.Property)
+                .Select(a => a.ApartmentId)
                 .ToList();
 
             ViewBag.Apartments = apartments;
@@ -169,7 +213,14 @@ namespace FinalProject_MVC.Controllers
                 Description = events.Description,
             };
 
-            return View(model);
+            if (id.HasValue && apartmentId.Contains(id.Value))
+            {
+                return View(model);
+            }
+            else
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
         }
 
         // POST: Events/Edit/5
@@ -177,6 +228,7 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(7)]
         public ActionResult Edit(EventModel model)
         {
             if (ModelState.IsValid)
@@ -206,8 +258,24 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Events/Delete/5
+        [CategoryAuthorize(5,7)]
         public ActionResult Delete(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            var apartmentOwnerId = db.Apartments
+                .Where(a => a.OwnerId == currentUserId)
+                .Include(a => a.Property)
+                .Select(a => a.ApartmentId)
+                .ToList();
+
+            var apartmentManaggerId = db.Apartments
+                .Where(a => a.ManagerId == currentUserId)
+                .Include(a => a.Property)
+                .Select(a => a.ApartmentId)
+                .ToList();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -217,12 +285,25 @@ namespace FinalProject_MVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(events);
+
+            if (id.HasValue && apartmentOwnerId.Contains(id.Value))
+            {
+                return View(events);
+            }
+            else if (id.HasValue && apartmentManaggerId.Contains(id.Value))
+            {
+                return View(events);
+            }
+            else
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
         }
 
         // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(5, 7)]
         public ActionResult DeleteConfirmed(int id)
         {
             Events events = db.Events.Find(id);

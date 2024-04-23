@@ -4,11 +4,19 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Users</h4>
+<div class="login_card sign_up">
+    <h4>User Detail</h4>
     <hr />
+    @if (Model.Image != null && Model.Image.Length > 0)
+    {
+        string base64Image = Convert.ToBase64String(Model.Image);
+        string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+        <img class="img-index" src="@imgSrc" alt="User Picture" />
+    }
+    else
+    {
+        <img class="img-index" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+    }
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.FirstName)
@@ -38,31 +46,30 @@
             @Html.DisplayNameFor(model => model.Category)
         </dt>
 
-        <dd>
-            @if (Model.CategoryId == 4)
-            {
-                <p>Administrator</p>
-            }
-            else if (Model.CategoryId == 5)
-            {
-                <p>Owner</p>
-            }
-            else if (Model.CategoryId == 6)
-            {
-                <p>Tenant</p>
-            }
-            else if (Model.CategoryId == 7)
-            {
-                <p>Manager</p>
-            }
-            else
-            {
-                <p>Unknown</p>
-            }
-        </dd>
+        @if (Model.CategoryId == 4)
+        {
+            <dd>Administrator</dd>
+        }
+        else if (Model.CategoryId == 5)
+        {
+            <dd>Owner</dd>
+        }
+        else if (Model.CategoryId == 6)
+        {
+            <dd>Tenant</dd>
+        }
+        else if (Model.CategoryId == 7)
+        {
+            <dd>Manager</dd>
+        }
+        else
+        {
+            <dd>Unknown</dd>
+        }
     </dl>
+    <div>
+        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = Model.UserId })</p>
+        <p class="button-access-profile">@Html.ActionLink("Back to List", "Index")</p>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

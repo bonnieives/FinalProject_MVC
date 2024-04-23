@@ -1,64 +1,64 @@
-﻿@model FinalProject_MVC.Models.Properties
+﻿@model FinalProject_MVC.Models.Apartments
 
 @{
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Properties</h4>
+<div class="login_card sign_up">
+    <h4>Are you sure you want to delete this apartment?</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.CivicNumber)
+            Civic Number
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CivicNumber)
+            @Html.DisplayFor(model => model.Property.CivicNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Address)
+            @Html.DisplayNameFor(model => model.Property.Address)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Address)
+            @Html.DisplayFor(model => model.Property.Address)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.City)
+            @Html.DisplayNameFor(model => model.Property.City)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.City)
+            @Html.DisplayFor(model => model.Property.City)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Zip)
+            @Html.DisplayNameFor(model => model.Property.Zip)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Zip)
+            @Html.DisplayFor(model => model.Property.Zip)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Province)
+            @Html.DisplayNameFor(model => model.Property.Province)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Province)
+            @Html.DisplayFor(model => model.Property.Province)
         </dd>
-
     </dl>
 
-    @using (Html.BeginForm()) {
+    <hr />
+
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete" class="btn btn-default" />
+            <p class="button-access-profile">@Html.ActionLink("Back to List", "Index")</p>
         </div>
     }
+
 </div>

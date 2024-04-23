@@ -4,10 +4,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Contracts</h4>
+<div class="login_card sign_up">
+    <h4>Details about this contract</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -37,11 +35,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Value)
+            Apartment Value
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Value)
+            $@Html.DisplayFor(model => model.Apartment.ApartmentValue)
         </dd>
 
         <dt>
@@ -53,11 +51,13 @@
         </dd>
 
     </dl>
+    <hr />
+    <p>
+        @if ((int)@Session["CurrentCategoryId"] != 6 && (int)@Session["CurrentCategoryId"] != 7)
+        {
+            <p class="button-access-profile" style="margin: 10px;">@Html.ActionLink("Edit", "Edit", new { id = Model.ContractId })</p>
+        }
+        <p class="button-access-profile" style="margin: 10px;">@Html.ActionLink("Back to List", "Index")</p>
+    </p>
 </div>
-<p>
-    @if ((int)@Session["CurrentCategoryId"] != 6)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ContractId }) <span>|</span>
-    }
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

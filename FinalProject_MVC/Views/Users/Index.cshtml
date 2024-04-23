@@ -4,66 +4,63 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="index_pictures">
+    <h2>List of Users</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            First Name
-        </th>
-        <th>
-            Last Name
-        </th>
-        <th>
-            Email
-        </th>
-        <th>
-            Category
-        </th>
-    </tr>
+    
+        @if ((int)@Session["CurrentCategoryId"] == 4 || (int)@Session["CurrentCategoryId"] == 5)
+        {
+            <p class="button-access-profile">
+                @Html.ActionLink("Create New", "Create")
+            </p>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @if (item.CategoryId == 4)
-            {
-                <p>Administrator</p>
-            }
-            else if (item.CategoryId == 5)
-            {
-                <p>Owner</p>
-            }
-            else if (item.CategoryId == 6)
-            {
-                <p>Tenant</p>
-            }
-            else if (item.CategoryId == 7)
-            {
-                <p>Manager</p>
-            }
-            else
-            {
-                <p>Unknown</p>
-            }
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
-        </td>
-    </tr>
-}
+           }
+    <hr>
+    <div class="subdiv-pictures">
+        @foreach (var item in Model)
+        {
+            <div class="card_picture">
+                <div class="div-picture">
+                    @if (item.Image != null && item.Image.Length > 0)
+                    {
+                        string base64Image = Convert.ToBase64String(item.Image);
+                        string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+                        <img class="img-index" src="@imgSrc" alt="User Picture" />
+                    }
+                    else
+                    {
+                        <img class="img-index" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+                    }
+                </div>
+                <div class="user-information">
+                    <p><span>Full name:</span> @item.FirstName @item.LastName</p>
+                    <p><span>Email:</span> @item.Email</p>
+                    @if (item.CategoryId == 4)
+                    {
+                        <p><span>Category:</span> Administrator</p>
+                    }
+                    else if (item.CategoryId == 5)
+                    {
+                        <p><span>Category:</span> Owner</p>
+                    }
+                    else if (item.CategoryId == 6)
+                    {
+                        <p><span>Category:</span> Tenant</p>
+                    }
+                    else if (item.CategoryId == 7)
+                    {
+                        <p><span>Category:</span> Manager</p>
+                    }
+                </div>
+                <div class="buttons_div_pics" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = item.UserId })</p>
+                    <p class="button-access-profile">@Html.ActionLink("Delete", "Delete", new { id = item.UserId })</p>
+                    <p class="button-access-profile">@Html.ActionLink("Details", "Details", new { id = item.UserId })</p>
+                </div>
+            </div>
 
-</table>
+        }
+    </div>
+
+        
+</div>

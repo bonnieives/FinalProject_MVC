@@ -13,6 +13,7 @@ namespace FinalProject_MVC.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public byte[] Image { get; set; }
         public int CategoryId { get; set; }
     }
 }

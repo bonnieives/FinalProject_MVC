@@ -39,6 +39,7 @@ namespace FinalProject_MVC.Models
         // GET: Apartments/Create
         public ActionResult Create()
         {
+           
             ViewBag.ManagerId = new SelectList(db.Users, "UserId", "FirstName");
             ViewBag.OwnerId = new SelectList(db.Users, "UserId", "FirstName");
             ViewBag.PropertyId = new SelectList(db.Properties, "PropertyId", "Address");
@@ -51,10 +52,16 @@ namespace FinalProject_MVC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ApartmentId,ApartmentNumber,OwnerId,ManagerId,PropertyId,StatusId")] Apartments apartments)
+        public ActionResult Create([Bind(Include = "ApartmentId,ApartmentNumber,OwnerId,ManagerId,PropertyId,StatusId")] Apartments apartments, string base64)
         {
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(base64))
+                {
+                    byte[] imageData = Convert.FromBase64String(base64);
+                    apartments.Image = imageData;
+                }
+
                 db.Apartments.Add(apartments);
                 db.SaveChanges();
                 return RedirectToAction("Index");

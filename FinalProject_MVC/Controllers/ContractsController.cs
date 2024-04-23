@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FinalProject_MVC.Authorization;
 using FinalProject_MVC.DAL;
 using FinalProject_MVC.Models;
 
@@ -63,6 +64,23 @@ namespace FinalProject_MVC.Controllers
         // GET: Contracts/Details/5
         public ActionResult Details(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            var ownerContractId = db.Contracts.
+                Where(c => c.Apartment.OwnerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
+            var tenantContractId = db.Contracts.
+                Where(c => c.TenantId == currentUserId).
+                FirstOrDefault(c => c.ContractId == currentUserId);
+
+            var managerContractId = db.Contracts.
+                Where(c => c.Apartment.ManagerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -72,10 +90,30 @@ namespace FinalProject_MVC.Controllers
             {
                 return HttpNotFound();
             }
+            if (currentCategoryId != 4)
+            {
+                if (ownerContractId != null && ownerContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else if (tenantContractId != null && tenantContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else if (managerContractId != null && managerContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else
+                {
+                    return View("~/Views/Shared/Error.cshtml");
+                }
+            }
             return View(contracts);
         }
 
         // GET: Contracts/Create
+        [CategoryAuthorize(4, 5)]
         public ActionResult Create()
         {
             int currentUserId = (int)Session["CurrentUserId"];
@@ -117,6 +155,7 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(4, 5)]
         public ActionResult Create(ContractModel model)
         {
             if (ModelState.IsValid)
@@ -127,7 +166,6 @@ namespace FinalProject_MVC.Controllers
                 {
                     InitialDate = model.InitialDate,
                     FinalDate = model.FinalDate,
-                    Value = model.Value,
                     Payday = model.Payday,
                     TenantId = model.TenantId,
                     ApartmentId = model.ApartmentId
@@ -149,8 +187,26 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Contracts/Edit/5
+        [CategoryAuthorize(4, 5)]
         public ActionResult Edit(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            var ownerContractId = db.Contracts.
+                Where(c => c.Apartment.OwnerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
+            var tenantContractId = db.Contracts.
+                Where(c => c.TenantId == currentUserId).
+                FirstOrDefault(c => c.ContractId == currentUserId);
+
+            var managerContractId = db.Contracts.
+                Where(c => c.Apartment.ManagerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -168,7 +224,6 @@ namespace FinalProject_MVC.Controllers
                 ContractId = contract.ContractId,
                 InitialDate = contract.InitialDate,
                 FinalDate = contract.FinalDate,
-                Value = contract.Value,
                 Payday = contract.Payday,
                 TenantId = contract.TenantId,
                 ApartmentId = contract.ApartmentId
@@ -189,9 +244,29 @@ namespace FinalProject_MVC.Controllers
                 .Include(a => a.Property)
                 .FirstOrDefault();
 
-
             ViewBag.CurrentApartment = thisApartment;
             ViewBag.ApartmentId = new SelectList(apartments, "ApartmentId", "Address", model.ApartmentId);
+
+            if (currentCategoryId != 4)
+            {
+                if (ownerContractId != null && ownerContractId.ContractId == id)
+                {
+                    return View(model);
+                }
+                else if (tenantContractId != null && tenantContractId.ContractId == id)
+                {
+                    return View(model);
+                }
+                else if (managerContractId != null && managerContractId.ContractId == id)
+                {
+                    return View(model);
+                }
+                else
+                {
+                    return View("~/Views/Shared/Error.cshtml");
+                }
+            }
+
             return View(model);
         }
 
@@ -200,6 +275,7 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(4, 5)]
         public ActionResult Edit(ContractModel model)
         {
             if (ModelState.IsValid)
@@ -209,7 +285,6 @@ namespace FinalProject_MVC.Controllers
                     ContractId = model.ContractId,
                     InitialDate = model.InitialDate,
                     FinalDate = model.FinalDate,
-                    Value = model.Value,
                     Payday = model.Payday,
                     TenantId = model.TenantId,
                     ApartmentId = model.ApartmentId
@@ -236,8 +311,26 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Contracts/Delete/5
+        [CategoryAuthorize(4, 5)]
         public ActionResult Delete(int? id)
         {
+            int currentUserId = (int)Session["CurrentUserId"];
+            int currentCategoryId = (int)Session["CurrentCategoryId"];
+
+            var ownerContractId = db.Contracts.
+                Where(c => c.Apartment.OwnerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
+            var tenantContractId = db.Contracts.
+                Where(c => c.TenantId == currentUserId).
+                FirstOrDefault(c => c.ContractId == currentUserId);
+
+            var managerContractId = db.Contracts.
+                Where(c => c.Apartment.ManagerId == currentUserId).
+                Include(c => c.Apartment).
+                FirstOrDefault(c => c.ContractId == id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -247,16 +340,41 @@ namespace FinalProject_MVC.Controllers
             {
                 return HttpNotFound();
             }
+
+            if (currentCategoryId != 4)
+            {
+                if (ownerContractId != null && ownerContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else if (tenantContractId != null && tenantContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else if (managerContractId != null && managerContractId.ContractId == id)
+                {
+                    return View(contracts);
+                }
+                else
+                {
+                    return View("~/Views/Shared/Error.cshtml");
+                }
+            }
+
             return View(contracts);
         }
 
         // POST: Contracts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(4, 5)]
         public ActionResult DeleteConfirmed(int id)
         {
             Contracts contracts = db.Contracts.Find(id);
             db.Contracts.Remove(contracts);
+
+            Apartments apartment = db.Apartments.Find(contracts.ApartmentId);
+            apartment.StatusId = 1;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

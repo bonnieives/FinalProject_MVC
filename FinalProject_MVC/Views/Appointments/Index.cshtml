@@ -4,83 +4,56 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-<h5>Appointments for @Session["CurrentFirstName"] @Session["CurrentLastName"]</h5>
-<h5>ID number: @Session["CurrentUserId"]</h5>
+<div class="login_card sign_up card_index">
+    <div class="header_text">
+        <h5>Appointments for @Session["CurrentFirstName"] @Session["CurrentLastName"]</h5>
 
-@if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
-{
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-}
-
-<table class="table">
-    <tr>
-        <th>
-            Appointment ID
-        </th>
-        <th>
-            Sender
-        </th>
-        <th>
-            Appointment Date and Time
-        </th>
-        <th>
-            Property Address
-        </th>
-        <th>
-            Apartment Number
-        </th>
-        <th>
-            Your Manager
-        </th>
-        <th>
-            Confirmation
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AppointmentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)  @Html.DisplayFor(modelItem => item.User.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.Property.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName)
-            </td>
-            <td>
-                @if (item.Confirmation == false)
-                {
-                    <span>Not yet</span>
-                }
-                else
-                {
-                    <span>Confirmed</span>
-                }
-            </td>
-            <td>
-                @if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
-                {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.AppointmentId }) <span>|</span>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.AppointmentId }) <span>|</span>
-                }
-                @Html.ActionLink("Details", "Details", new { id = item.AppointmentId })
-            </td>
-        </tr>
-    }
-
-</table>
+        @if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
+        {
+            <p class="button-access-profile">
+                @Html.ActionLink("Create New", "Create")
+            </p>
+        }
+    </div>
+    <div class="cards_container_text">
+        @foreach (var item in Model)
+        {
+            <div class="card_text_sender_div">
+                <p>
+                    Sender:
+                    <span>@Html.DisplayFor(modelItem => item.User.FirstName)  @Html.DisplayFor(modelItem => item.User.LastName)</span>
+                </p>
+                <p>
+                    Manager:
+                    <span>@Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName)</span>
+                </p>
+                <hr />
+                <p>
+                    Scheduled For:
+                    <span>@Html.DisplayFor(modelItem => item.DateTime)</span>
+                </p>
+                <hr />
+                <p>
+                    Full address:
+                    <span>
+                        @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber) -
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber)
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Zip),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.City),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Province)
+                    </span>
+                </p>
+                <hr />
+                <div class="buttons_div_text">
+                    @if ((int)@Session["CurrentCategoryId"] == 6 || (int)@Session["CurrentCategoryId"] == 7)
+                    {
+                        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = item.AppointmentId })</p>
+                        <p class="button-access-profile">@Html.ActionLink("Delete", "Delete", new { id = item.AppointmentId })</p>
+                    }
+                    <p class="button-access-profile">@Html.ActionLink("Details", "Details", new { id = item.AppointmentId })</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

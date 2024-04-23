@@ -3,66 +3,57 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-
-<p>
-    @if ((int)@Session["CurrentCategoryId"] == 7)
-    {
-        @Html.ActionLink("Create New", "Create")
-    }
-
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Event Id
-        </th>
-        <th>
-            Manager
-        </th>
-        <th>
-            Owner
-        </th>
-        <th>
-            Apartment Address
-        </th>
-        <th>
-            Apartment Number
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EventId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apartment.Owner.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Owner.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber) @Html.DisplayFor(modelItem => item.Apartment.Property.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber)
-        </td>
-        <td>
+<div class="login_card sign_up card_index">
+    <div class="header_text">
+        <div class="cards_container_text">
+            <h5>Informed Events</h5>
             @if ((int)@Session["CurrentCategoryId"] == 7)
             {
-                @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) <span>|</span>
-                @Html.ActionLink("Delete", "Delete", new { id = item.EventId }) <span>|</span>
+                <p class="button-access-profile">@Html.ActionLink("Inform New Event", "Create")</p>
             }
-            @Html.ActionLink("Details", "Details", new { id = item.EventId })
+        </div>
 
-        </td>
-    </tr>
-    <tr>
-        <td style="border-bottom:2px solid black;" colspan="6"><h5>Message: </h5>@Html.DisplayFor(modelItem => item.Description)</td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <div class="card_text_sender_div">
+                <p>
+                    Manager:
+                    <span>@Html.DisplayFor(modelItem => item.Apartment.Manager.FirstName)  @Html.DisplayFor(modelItem => item.Apartment.Manager.LastName)</span>
+                </p>
+                <p>
+                    Owner:
+                    <span>@Html.DisplayFor(modelItem => item.Apartment.Owner.FirstName) @Html.DisplayFor(modelItem => item.Apartment.Owner.LastName)</span>
+                </p>
+                <hr />
+                <p>
+                    Full address:
+                    <span>
+                        @Html.DisplayFor(modelItem => item.Apartment.ApartmentNumber) -
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.CivicNumber)
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Address),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Zip),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.City),
+                        @Html.DisplayFor(modelItem => item.Apartment.Property.Province)
+                    </span>
+                </p>
+                <hr />
+                <p>
+                    Event Description:
+                    <span>@Html.DisplayFor(modelItem => item.Description)</span>
+                </p>
+                <hr />
 
-</table>
+                <div class="buttons_div_text">
+                    @if ((int)@Session["CurrentCategoryId"] == 7)
+                    {
+                        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = item.EventId })</p>
+                        <p class="button-access-profile">@Html.ActionLink("Delete", "Delete", new { id = item.EventId })</p>
+                    }
+                    <p class="button-access-profile">@Html.ActionLink("Details", "Details", new { id = item.EventId })</p>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+

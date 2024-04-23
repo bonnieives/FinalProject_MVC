@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using FinalProject_MVC.Authorization;
 using FinalProject_MVC.DAL;
 using FinalProject_MVC.Models;
 using Newtonsoft.Json.Linq;
@@ -77,7 +78,10 @@ namespace FinalProject_MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Appointments appointments = db.Appointments.Include(a => a.User).Include(a => a.Apartment).FirstOrDefault(a => a.AppointmentId == id);
+            Appointments appointments = db.Appointments
+                .Include(a => a.User)
+                .Include(a => a.Apartment)
+                .FirstOrDefault(a => a.AppointmentId == id);
 
             if (appointments == null)
             {
@@ -90,6 +94,7 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Appointments/Create
+        [CategoryAuthorize(6, 7)]
         public ActionResult Create()
         {
             int currentUserId = (int)Session["CurrentUserId"];
@@ -141,6 +146,7 @@ namespace FinalProject_MVC.Controllers
         // POST: Appointments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6, 7)]
         public ActionResult Create(Appointments appointments)
         {
             if (ModelState.IsValid)
@@ -148,6 +154,12 @@ namespace FinalProject_MVC.Controllers
                 int userId = (int)Session["CurrentUserId"];
                 int currentCategoryId = (int)Session["CurrentCategoryId"];
 
+                if (appointments.DateTime < DateTime.Now)
+                {
+                    ViewBag.Error = "Appointment date and time cannot be in the past.";
+                    PopulateDropdownLists();
+                    return View(appointments);
+                }
 
                 if (currentCategoryId == 7)
                 {
@@ -156,9 +168,7 @@ namespace FinalProject_MVC.Controllers
                     appointments.SenderId = senderId;
 
                     var thisUser = db.Users
-                        .FirstOrDefault(u => u.UserId == userId);
-
-                    
+                        .FirstOrDefault(u => u.UserId == userId);                    
                         
                 }
                 else
@@ -171,6 +181,7 @@ namespace FinalProject_MVC.Controllers
 
                 db.Appointments.Add(appointments);
                 db.SaveChanges();
+                PopulateDropdownLists();
                 return RedirectToAction("Index");
             }
 
@@ -200,6 +211,32 @@ namespace FinalProject_MVC.Controllers
             return View(appointments);
         }
 
+        private void PopulateDropdownLists()
+        {
+            var apartments = db.Apartments
+                .Where(a => a.StatusId == 1)
+                .Include(a => a.Property)
+                .Select(a => new SelectListItem
+                {
+                    Value = a.ApartmentId.ToString(),
+                    Text = a.Property.CivicNumber.ToString() + " " + a.Property.Address + ", " + a.Property.Zip + ", Apartment Number: " + a.ApartmentNumber
+                })
+                .ToList();
+
+            ViewBag.Apartments = apartments;
+
+            var tenants = db.Users
+                .Where(u => u.CategoryId == 6)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.UserId.ToString(),
+                    Text = u.FirstName + " " + u.LastName
+                })
+                .ToList();
+
+            ViewBag.Tenants = tenants;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -211,6 +248,7 @@ namespace FinalProject_MVC.Controllers
 
 
         // GET: Appointments/Edit/5
+        [CategoryAuthorize(6, 7)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -254,11 +292,19 @@ namespace FinalProject_MVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6, 7)]
         public ActionResult Edit(AppointmentModel model)
         {
             if (ModelState.IsValid)
             {
                 var existingAppointment = db.Appointments.Find(model.AppointmentId);
+
+                if (model.DateTime < DateTime.Now)
+                {
+                    ViewBag.Error = "Appointment date and time cannot be in the past.";
+                    PopulateDropdownLists();
+                    return View(model);
+                }
 
                 if (existingAppointment != null)
                 {
@@ -284,6 +330,7 @@ namespace FinalProject_MVC.Controllers
         }
 
         // GET: Appointments/Delete/5
+        [CategoryAuthorize(6, 7)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -299,8 +346,10 @@ namespace FinalProject_MVC.Controllers
         }
 
         // POST: Appointments/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CategoryAuthorize(6,7)]
         public ActionResult DeleteConfirmed(int id)
         {
             Appointments appointments = db.Appointments.Find(id);

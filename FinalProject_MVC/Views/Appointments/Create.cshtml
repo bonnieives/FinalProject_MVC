@@ -4,33 +4,25 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>Appointments</h4>
+<div class="login_card sign_up">
+    <h4>Schedule Your Appointment</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.AppointmentId)
 
     <div class="form-group">
-        @Html.LabelFor(model => model.DateTime, "Choose the Date and Time", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.DateTime, "Choose the Date and Time", htmlAttributes: new { @class = "custom_label" })
         <div class="col-md-10">
-            @{
-                string formattedDateTime = Model.DateTime.ToString("yyyy-MM-ddTHH:mm");
-                string timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(Model.DateTime).ToString("hh\\:mm");
-                string dateTimeValue = $"{formattedDateTime}{timeZoneOffset}";
-            }
-            <input type="datetime-local" id="DateTime" name="DateTime" class="form-control" value="@dateTimeValue" />
-            @Html.ValidationMessageFor(model => model.DateTime, "", new { @class = "text-danger" })
+            <input type="datetime-local" id="DateTime" name="DateTime" class="form-control" />
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.ApartmentId, "Select Property", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.ApartmentId, "Select Property", htmlAttributes: new { @class = "custom_label" })
         <div class="col-md-10">
             @Html.DropDownListFor(model => model.ApartmentId, (IEnumerable<SelectListItem>)ViewBag.Apartments, "Select Property", new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.ApartmentId, "", new { @class = "text-danger" })
@@ -39,19 +31,22 @@
 
     @if ((int)@Session["CurrentCategoryId"] == 7)
     {
-
         <div class="form-group">
-            @Html.LabelFor(model => model.User.UserId, "Select Tenant", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.User.UserId, "Select Tenant", htmlAttributes: new { @class = "custom_label" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.User.UserId, (IEnumerable<SelectListItem>)ViewBag.Tenants, "Select Tenant", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.User.UserId, "", new { @class = "text-danger" })
             </div>
         </div>
-
     }
     else
     {
         @Html.HiddenFor(model => model.User.UserId, new { Value = (int)Session["CurrentUserId"] })
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger" style="margin-top: 10px;">@ViewBag.Error</div>
     }
 
     <div class="form-group">
@@ -59,12 +54,12 @@
             <input type="submit" value="Create" class="btn btn-default" />
         </div>
     </div>
+
+    <div>
+        <p class="button-access-profile">@Html.ActionLink("Back to List", "Index")</p>
+    </div>
 </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

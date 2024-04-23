@@ -31,6 +31,7 @@ namespace FinalProject_MVC.DAL
             modelBuilder.Configurations.Add(new AppointmentsConfiguration());
             modelBuilder.Configurations.Add(new MessagesConfiguration());
             modelBuilder.Configurations.Add(new EventsConfiguration());
+            modelBuilder.Configurations.Add(new UsersConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

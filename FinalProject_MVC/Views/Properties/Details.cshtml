@@ -4,70 +4,66 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Properties</h4>
+<div class="login_card sign_up">
+    <h4>Details about this property</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            Civic Number
+            @Html.DisplayFor(model => model.ApartmentTitle)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Property.CivicNumber)
+            @Html.DisplayFor(model => model.Status.StatusDescription)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Property.Address)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Property.Address)
-        </dd>
-
-        <dt>
-            Apartment Number
-        </dt>
-
-        <dd>
-            @if (ViewBag.Apartments != null)
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+            @if (Model.Image != null && Model.Image.Length > 0)
             {
-               <p>@ViewBag.Apartments</p>
+                string base64Image = Convert.ToBase64String(Model.Image);
+                string imgSrc = $"data:image/jpeg;base64,{base64Image}";
+                <img class="apartment_picture" src="@imgSrc" alt="User Picture" />
             }
-        </dd>
-
+            else
+            {
+                <img class="apartment_picture" src="~/Pictures/placeholder.jpg" alt="User Picture" />
+            }
+        </div>
         <dt>
-            @Html.DisplayNameFor(model => model.Property.City)
+            Apartment Full Address
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Property.City)
+            @Html.DisplayFor(model => model.ApartmentNumber) - @Html.DisplayFor(model => model.Property.CivicNumber) @Html.DisplayFor(model => model.Property.Address),
+            @Html.DisplayFor(model => model.Property.Zip), @Html.DisplayFor(model => model.Property.City), @Html.DisplayFor(model => model.Property.Province)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Property.Zip)
+            Property Owner
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Property.Zip)
+            @Html.DisplayFor(model => model.Owner.FirstName) @Html.DisplayFor(model => model.Owner.LastName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Property.Province)
+            Property Manager
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Property.Province)
+            @Html.DisplayFor(model => model.Manager.FirstName) @Html.DisplayFor(model => model.Manager.LastName)
         </dd>
 
     </dl>
-</div>
-<p>
-    @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 7)
+    <hr />
+    @if ((int)@Session["CurrentCategoryId"] == 5 || (int)@Session["CurrentCategoryId"] == 6)
     {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.PropertyId }) <span>|</span>
+        <p class="button-access-profile">@Html.ActionLink("Edit", "Edit", new { id = Model.PropertyId })</p>
     }
 
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    @if ((int)@Session["CurrentCategoryId"] == 6)
+    {
+        <p class="button-access-profile">@Html.ActionLink("Home", "Index","Home")</p>
+    }
+    @if ((int)@Session["CurrentCategoryId"] != 6)
+    {
+        <p class="button-access-profile">@Html.ActionLink("Back to List", "Index", new { id = Model.PropertyId })</p>
+    }
+</div>
